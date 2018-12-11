@@ -1,0 +1,65 @@
+@import 'normalize';
+@import 'base';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+$card_trans: transform .125s ease-in-out;
+$card_header_scale: .95;
+
+.card {
+  background-color: #DDD;
+  min-height: 100px;
+  margin-bottom: 2.5%;
+  transform: scaleX($card_header_scale);
+  transition: $card_trans;
+}
+
+.card-header {
+  background-color: #555;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-header h1 {
+  margin: 0;
+  color: #DDD;
+  font-weight: normal;
+  transition: $card_trans;
+  transform: scaleX(1 + 1 - $card_header_scale);
+}
+
+.card-body--outer {
+  height: 0;
+  overflow: hidden;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: $card_trans;
+}
+
+.card-body--inner {
+  padding: 1em;
+}
+
+.card.expanded {
+  transform: scaleX(1);
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  .card-header h1 {
+    transform: scaleX(1);
+  }
+  .card-body--outer {
+    transform: scaleY(1);
+  }
+}
