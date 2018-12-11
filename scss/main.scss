@@ -11,12 +11,15 @@ body {
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
 }
 
-$card_trans: transform .125s ease-in-out;
+.no-scroll {
+  overflow-y: hidden;
+}
+
+$card_trans_duration: .125s;
+$card_trans: transform $card_trans_duration ease-in-out;
 $card_header_scale: .95;
 
 .card {
-  background-color: #DDD;
-  min-height: 100px;
   margin-bottom: 2.5%;
   transform: scaleX($card_header_scale);
   transition: $card_trans;
@@ -24,7 +27,7 @@ $card_header_scale: .95;
 
 .card-header {
   background-color: #555;
-  min-height: 360px;
+  height: 360px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,12 +36,12 @@ $card_header_scale: .95;
 .card-header h1 {
   margin: 0;
   color: #DDD;
-  font-weight: normal;
   transition: $card_trans;
   transform: scaleX(1 + 1 - $card_header_scale);
 }
 
 .card-body--outer {
+  background-color: #DDD;
   height: 0;
   overflow: hidden;
   transform: scaleY(0);
@@ -56,10 +59,30 @@ $card_header_scale: .95;
   top: 0;
   z-index: 1;
   width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
   .card-header h1 {
     transform: scaleX(1);
   }
   .card-body--outer {
+    height: auto;
+    min-height: calc(100vh - 360px);
+    animation-name: cardExpansion;
+    animation-duration: $card_trans_duration;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  & + .card {
+    margin-top: calc(360px + 2.5%);
+  }
+}
+
+
+@keyframes cardExpansion {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
     transform: scaleY(1);
   }
 }
