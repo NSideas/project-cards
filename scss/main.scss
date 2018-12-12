@@ -5,6 +5,7 @@ $card_trans_duration: .25s;
 $card_trans: all $card_trans_duration ease-in-out;
 $card_header_scale: .95;
 $card_invert_scale: 1 + 1 - $card_header_scale;
+$card_height: 360px;
 
 html,
 body {
@@ -12,7 +13,6 @@ body {
 }
 
 @mixin card_state__default {
-  // transform: scaleX($card_header_scale);
   &::before {
     transform: scaleY(0);
     opacity: 0;
@@ -30,10 +30,9 @@ body {
 }
 
 @mixin card_state__expanded {
-  // transform: scaleX(1);
+
   &::before {
     transform: scaleY(1);
-    // opacity: 1;
   }
   .card-header h1 {
     transform: scaleX(1);
@@ -84,7 +83,7 @@ main,
   align-items: center;
   justify-content: center;
   background-color: #555;
-  height: 360px;
+  height: $card_height;
   text-decoration: none;
 }
 
@@ -119,62 +118,19 @@ main,
 .card.expanded {
   @include card_state__expanded;
   position: fixed;
-  // top: 0;
   z-index: 1;
   height: 100vh;
   overflow-y: scroll;
   .card-body--outer {
     height: auto;
-    min-height: calc(100vh - 360px);
-  }
-  & + .card {
-    // margin-top: calc(360px + 2.5%);
+    min-height: calc(100vh - $card_height);
   }
 }
 
-.card.anim-in {
-  &::before{
-    // animation-name: cardExpansion;
-  }
-  .card-body--inner {
-    // animation-name: cardContentSlide;
-  }
-}
 .card.anim-out {
   @include card_state__default;
-  &::before {
-    // animation-name: cardExpansion;
-    // animation-direction: reverse;
-  }
-  .card-body--inner {
-    // animation-name: cardContentSlide;
-    // animation-direction: reverse;
-  }
 }
 
-
-
-@keyframes cardExpansion {
-  0% {
-    opacity: 0;
-    transform: scaleY(0.2);
-  }
-  100% {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-@keyframes cardContentSlide {
-  0% {
-    opacity: 0;
-    transform: translateY(-10vh);
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.card.extra-margin {
+  margin-bottom: $card_height;
 }

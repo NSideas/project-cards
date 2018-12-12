@@ -20,11 +20,16 @@ function positionCard(index) {
 
 }
 
-function openCard(el, delay) {
+function openCard(index, delay) {
+  const el = cards[index];
+  if (index === cards.length - 1) {
+    cards[index - 1].classList.add('extra-margin');
+  }
   el.classList.add('expanded', 'anim-in');
   document.body.classList.add('no-scroll');
   el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   el.style.top = `-${window.pageYOffset}px`;
+
   setTimeout(() => {
     el.classList.remove('anim-in');
   }, delay);
@@ -39,6 +44,9 @@ function closeCard(index, delay) {
   setTimeout(() => {
     el.classList.remove('expanded', 'anim-out');
     el.style.top = `0`;
+    if (index === cards.length - 1) {
+      cards[index - 1].classList.remove('extra-margin');
+    }
   }, delay);
 }
 
@@ -49,11 +57,14 @@ function translateCard(el) {
 function cardExpansion(index) {
   let delay = 250;
   if (!cards[index].classList.contains('expanded')) {
-    openCard(cards[index], delay);
+
+    openCard(index, delay);
   } else {
     closeCard(index, delay);
   }
 }
+
+
 
 for (let i = 0; i < cards.length; i++) {
   positionCard(i);
@@ -63,7 +74,8 @@ for (let i = 0; i < cards.length; i++) {
   cardHeader.addEventListener('click', (e) => {
     e.preventDefault();
 
-    cards[cards.length - 1].style.marginBottom = '50vh';
+
+    // cards[cards.length - 1].style.marginBottom = '50vh';
     // cards[i].scrollIntoView();
 
     cardExpansion(i);
