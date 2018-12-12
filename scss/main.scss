@@ -1,41 +1,73 @@
 @import 'normalize';
 @import 'base';
 
-$card_trans_duration: .125s;
-$card_trans: transform $card_trans_duration ease-in-out;
+$card_trans_duration: .25s;
+$card_trans: all $card_trans_duration ease-in-out;
 $card_header_scale: .95;
 
+html,
+body {
+  height: 100%;
+}
+
 @mixin card_state__default {
-  transform: scaleX($card_header_scale);
+  // transform: scaleX($card_header_scale);
+  &::before {
+    transform: scaleY(0);
+    opacity: 0;
+  }
   .card-header h1,
   .card-body--outer {
     transform: scaleX(1 + 1 - $card_header_scale);
   }
+  .card-body--inner {
+    opacity: 0;
+    transform: translateY(-10vh);
+  }
 }
 
 @mixin card_state__expanded {
-  transform: scaleX(1);
+  // transform: scaleX(1);
+  &::before {
+    transform: scaleY(1);
+    opacity: 1;
+  }
   .card-header h1,
   .card-body--outer {
     transform: scaleX(1);
   }
+  .card-body--inner {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main,
+#card-wrapper {
+  height: 100%;
+}
+
+#card-wrapper {
+  position: relative;
 }
 
 .card {
+  position: absolute;
+  top: 0;
   width: 100%;
-  margin-bottom: 2.5%;
-  transition: $card_trans;
+  transition: transform $card_trans_duration ease-in-out;
   @include card_state__default;
   &::before {
     content: '';
     display: block;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: #DDD;
     z-index: 0;
+    transition: all .25s ease-in-out;
   }
 }
 
@@ -70,22 +102,17 @@ $card_header_scale: .95;
   z-index: 1;
   padding: 2.5% 5%;
   max-width: 680px;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-  animation-duration: .25s;
+  transition: all .25s ease-out;
 }
 
 .card::before {
   transform-origin: top;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-  animation-duration: $card_trans_duration;
 }
 
 .card.expanded {
   @include card_state__expanded;
   position: fixed;
-  top: 0;
+  // top: 0;
   z-index: 1;
   height: 100vh;
   overflow-y: scroll;
@@ -94,27 +121,27 @@ $card_header_scale: .95;
     min-height: calc(100vh - 360px);
   }
   & + .card {
-    margin-top: calc(360px + 2.5%);
+    // margin-top: calc(360px + 2.5%);
   }
 }
 
 .card.anim-in {
   &::before{
-    animation-name: cardExpansion;
+    // animation-name: cardExpansion;
   }
   .card-body--inner {
-    animation-name: cardContentSlide;
+    // animation-name: cardContentSlide;
   }
 }
 .card.anim-out {
   @include card_state__default;
   &::before {
-    animation-name: cardExpansion;
-    animation-direction: reverse;
+    // animation-name: cardExpansion;
+    // animation-direction: reverse;
   }
   .card-body--inner {
-    animation-name: cardContentSlide;
-    animation-direction: reverse;
+    // animation-name: cardContentSlide;
+    // animation-direction: reverse;
   }
 }
 
