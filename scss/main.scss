@@ -44,13 +44,12 @@ $card_header_scale: .95;
   background-color: #DDD;
   height: 0;
   overflow: hidden;
-  transform: scaleY(0);
   transform-origin: top;
   transition: $card_trans;
 }
 
 .card-body--inner {
-  padding: 1em;
+  padding: 2.5% 5%;
 }
 
 .card.expanded {
@@ -67,15 +66,30 @@ $card_header_scale: .95;
   .card-body--outer {
     height: auto;
     min-height: calc(100vh - 360px);
-    animation-name: cardExpansion;
-    animation-duration: $card_trans_duration;
-    animation-timing-function: linear;
-    animation-fill-mode: forwards;
   }
   & + .card {
     margin-top: calc(360px + 2.5%);
   }
 }
+
+.card.anim-in {
+  .card-body--outer {
+    animation-name: cardExpansion;
+    animation-duration: $card_trans_duration;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+}
+.card.anim-out {
+  .card-body--outer {
+    animation-name: cardExpansion;
+    animation-duration: $card_trans_duration;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    animation-direction: reverse;
+  }
+}
+
 
 
 @keyframes cardExpansion {

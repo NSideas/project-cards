@@ -32,7 +32,7 @@
     "tests"
   ],
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "chance": "^1.0.18"
   }
 }

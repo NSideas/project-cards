@@ -14,16 +14,19 @@ function randomContent() {
 for (let card of cards) {
   card.querySelector('.card-body--inner').innerHTML = randomContent();
   card.addEventListener('click', () => {
-    card.classList.add('animating');
+    let delay = 125;
     if (!card.classList.contains('expanded')) {
-      card.classList.add('expanded');
+      card.classList.add('expanded', 'anim-in');
       document.body.classList.add('no-scroll');
+      setTimeout(() => {
+        card.classList.remove('anim-in');
+      }, delay);
     } else {
-      card.classList.remove('expanded');
+      card.classList.add('anim-out');
       document.body.classList.remove('no-scroll');
+      setTimeout(() => {
+        card.classList.remove('expanded', 'anim-out');
+      }, delay);
     }
-    setTimeout(() => {
-      card.classList.remove('animating');
-    }, 1000)
   });
 }
