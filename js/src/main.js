@@ -11,7 +11,7 @@ function randomContent() {
 for (let card of cards) {
   card.querySelector('.card-body--inner').innerHTML = randomContent();
   card.querySelector('.card-header').addEventListener('click', () => {
-    let delay = 125;
+    let delay = 250;
     if (!card.classList.contains('expanded')) {
       card.classList.add('expanded', 'anim-in');
       document.body.classList.add('no-scroll');
