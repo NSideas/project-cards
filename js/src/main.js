@@ -22,7 +22,6 @@ function positionCard(index) {
 
 function openCard(el, delay) {
   el.classList.add('expanded', 'anim-in');
-
   document.body.classList.add('no-scroll');
   el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   el.style.top = `-${window.pageYOffset}px`;
@@ -33,6 +32,7 @@ function openCard(el, delay) {
 
 function closeCard(index, delay) {
   const el = cards[index];
+  el.scrollTop = 0;
   el.classList.add('anim-out');
   document.body.classList.remove('no-scroll');
   positionCard(index);
