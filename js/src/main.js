@@ -8,22 +8,27 @@ function randomContent() {
   return html;
 }
 
+function cardExpansion(el) {
+  let delay = 250;
+  if (!el.classList.contains('expanded')) {
+    el.classList.add('expanded', 'anim-in');
+    document.body.classList.add('no-scroll');
+    setTimeout(() => {
+      el.classList.remove('anim-in');
+    }, delay);
+  } else {
+    el.classList.add('anim-out');
+    document.body.classList.remove('no-scroll');
+    setTimeout(() => {
+      el.classList.remove('expanded', 'anim-out');
+    }, delay);
+  }
+}
+
 for (let card of cards) {
   card.querySelector('.card-body--inner').innerHTML = randomContent();
-  card.querySelector('.card-header').addEventListener('click', () => {
-    let delay = 250;
-    if (!card.classList.contains('expanded')) {
-      card.classList.add('expanded', 'anim-in');
-      document.body.classList.add('no-scroll');
-      setTimeout(() => {
-        card.classList.remove('anim-in');
-      }, delay);
-    } else {
-      card.classList.add('anim-out');
-      document.body.classList.remove('no-scroll');
-      setTimeout(() => {
-        card.classList.remove('expanded', 'anim-out');
-      }, delay);
-    }
+  let cardHeader = card.querySelector('.card-header');
+  cardHeader.addEventListener('click', () => {
+    cardExpansion(card);
   });
 }
