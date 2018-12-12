@@ -3,7 +3,7 @@ const cards = document.querySelectorAll('.card');
 
 function randomContent() {
   let html  = `<h2>${chance.sentence()}</h2>`;
-      html += `<h5>${chance.sentence({ words: 5 })}</h5>`;
+      html += `<h4>${chance.sentence({ words: 5 })}</h4>`;
       html += `<p>${chance.paragraph()}</p>`;
   return html;
 }
