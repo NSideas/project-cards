@@ -7,14 +7,16 @@ $card_header_scale: .95;
 
 @mixin card_state__default {
   transform: scaleX($card_header_scale);
-  .card-header h1 {
+  .card-header h1,
+  .card-body--outer {
     transform: scaleX(1 + 1 - $card_header_scale);
   }
 }
 
 @mixin card_state__expanded {
   transform: scaleX(1);
-  .card-header h1 {
+  .card-header h1,
+  .card-body--outer {
     transform: scaleX(1);
   }
 }
@@ -24,14 +26,28 @@ $card_header_scale: .95;
   margin-bottom: 2.5%;
   transition: $card_trans;
   @include card_state__default;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #DDD;
+    z-index: 0;
+  }
 }
 
 .card-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #555;
   height: 360px;
+  text-decoration: none;
 }
 
 .card-header h1 {
@@ -44,19 +60,26 @@ $card_header_scale: .95;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: #DDD;
   height: 0;
   overflow: hidden;
-  transform-origin: top;
   transition: $card_trans;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-  animation-duration: $card_trans_duration;
 }
 
 .card-body--inner {
+  position: relative;
+  z-index: 1;
   padding: 2.5% 5%;
   max-width: 680px;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-duration: .25s;
+}
+
+.card::before {
+  transform-origin: top;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-duration: $card_trans_duration;
 }
 
 .card.expanded {
@@ -76,14 +99,21 @@ $card_header_scale: .95;
 }
 
 .card.anim-in {
-  .card-body--outer {
+  &::before{
     animation-name: cardExpansion;
+  }
+  .card-body--inner {
+    animation-name: cardContentSlide;
   }
 }
 .card.anim-out {
   @include card_state__default;
-  .card-body--outer {
+  &::before {
     animation-name: cardExpansion;
+    animation-direction: reverse;
+  }
+  .card-body--inner {
+    animation-name: cardContentSlide;
     animation-direction: reverse;
   }
 }
@@ -92,9 +122,25 @@ $card_header_scale: .95;
 
 @keyframes cardExpansion {
   0% {
-    transform: scaleY(0);
+    opacity: 0;
+    transform: scaleY(0.2);
   }
   100% {
+    opacity: 1;
     transform: scaleY(1);
+  }
+}
+
+@keyframes cardContentSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-10vh);
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
