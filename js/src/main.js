@@ -1,7 +1,22 @@
 
+
 const cards = document.querySelectorAll('.card');
 const cardWrapper = document.getElementById('card-wrapper');
-let cardHeight = 360;
+
+
+const mq = {
+  small:  window.matchMedia("(min-width: 400px)"),
+  medium: window.matchMedia("(min-width: 700px)"),
+  large:  window.matchMedia("(min-width: 1000px)")
+};
+
+
+let cardHeight = mq.medium.matches ? 480
+               : mq.small.matches ? 360
+               : 300;
+
+let cardScale = mq.small.matches ? 0.95 : 0.925;
+let gutter = cardWrapper.clientWidth * (1 - cardScale)/2;
 
 function randomProjectContent(el) {
   let projectTitle = `<h1>${chance.animal()} ${chance.animal()}</h1>`;
@@ -18,10 +33,8 @@ function positionCard(index) {
   const el = cards[index];
   const header = document.getElementById('header');
   const hh = header ? header.clientHeight : 0;
-  console.log(hh);
   const y = hh + index * cardHeight;
-  const margin = cardWrapper.clientWidth * 0.025;
-  el.style.transform = `scaleX(.95) translateY(${y + margin * index}px)`;
+  el.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
 function openCard(index, delay) {
@@ -61,7 +74,6 @@ function cardExpansion(index) {
     closeCard(index, delay);
   }
 }
-
 
 for (let i = 0; i < cards.length; i++) {
   positionCard(i);

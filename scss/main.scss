@@ -1,11 +1,21 @@
 @import 'normalize';
 @import 'base';
 
+$small: 400px;
+$medium: 700px;
+$large: 1000px;
 
 :root {
-  --card-scale: .95;
-  --gutter: .025;
-  --card-height: 360px;
+  --card-scale: .925;
+  --gutter: calc((1 - var(--card-scale))/2 );
+  --card-height: 300px;
+  @media (min-width: $small) {
+    --card-scale: .95;
+    --card-height: 360px;
+  }
+  @media (min-width: $medium) {
+    --card-height: 480px;
+  }
 }
 
 $card_header_scale: var(--card-scale);
@@ -78,11 +88,9 @@ header {
   }
 }
 
-main,
 #card-wrapper {
   height: 100%;
 }
-
 
 .card {
   @include card_color(#1A1A1A);
@@ -143,9 +151,12 @@ main,
 .card-body--inner {
   position: relative;
   z-index: 1;
-  padding: 2.5% 5% 10% 5%;
+  padding: 2.5% 5% 25% 5%;
   max-width: 680px;
   transition: all $card_trans_duration ease-out;
+  @media (min-width: $small) {
+    padding-bottom: 15%;
+  }
 }
 
 .card.expanded {
