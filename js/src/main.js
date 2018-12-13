@@ -69,6 +69,20 @@ function closeCard(index) {
   }, cardDelay);
 }
 
+function fetchProjectInfo(index, href) {
+  if (!cards[index].classList.contains('expanded')) {
+    fetch(href).then((response) => {
+      return response.text();
+    }).then((content) => {
+      const cardBody = cards[index].querySelector('.card-body--outer');
+      cardBody.innerHTML = content;
+      openCard(index);
+    }).catch((err) => {
+      console.log('Fetch Error', err);
+    });
+  }
+}
+
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
@@ -79,18 +93,9 @@ function setUpCards() {
   for (let i = 0; i < cards.length; i++) {
     positionCard(i);
     let cardHeader = cards[i].querySelector('.card-header');
-    cardHeader.addEventListener('click', (e) => {
-      if (!cards[i].classList.contains('expanded')) {
-        fetch(cardHeader.getAttribute('href')).then((response) => {
-          return response.text();
-        }).then((content) => {
-          const cardBody = cards[i].querySelector('.card-body--outer');
-          cardBody.innerHTML = content;
-          openCard(i);
-        }).catch((err) => {
-          console.log('Fetch Error', err);
-        });
-      }
+    let project = cardHeader.getAttribute('href');
+    cardHeader.addEventListener('click', () => {
+      fetchProjectInfo(i, project);
     });
   }
 }
