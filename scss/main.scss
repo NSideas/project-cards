@@ -61,6 +61,7 @@ main,
   position: absolute;
   top: 0;
   width: 100%;
+  color: white;
   scroll-behavior: smooth;
   transition: transform $card_trans_duration ease-in-out;
   @include card_state__default;
@@ -84,14 +85,15 @@ main,
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #555;
+  color: inherit;
+  background-color: inherit;
   height: var(--card-height);
   text-decoration: none;
 }
 
 .card-header h1 {
   margin: 0;
-  color: #DDD;
+  letter-spacing: .5px;
   transition: $card_trans;
 }
 
@@ -101,7 +103,6 @@ main,
   align-items: flex-start;
   height: 0;
   overflow: hidden;
-  background-color: #DDD;
   transition: all .25s ease-out;
 }
 
@@ -135,4 +136,29 @@ main,
 
 .card.extra-margin {
   margin-bottom: calc(var(--card-height) + 2.5%);
+}
+
+
+
+@mixin card_color($color, $invert: false) {
+  @if $invert == true {
+    color: mix($color, black, 20%);
+  }
+  .card-header,
+  .card-body--outer {
+    background-color: $color;
+  }
+}
+
+.card {
+  @include card_color(#1A1A1A);
+}
+#card-2 {
+  @include card_color(#FF5F57);
+}
+#card-3 {
+  @include card_color(#C4C4C4, true);
+}
+#card-4 {
+  @include card_color(#17E0BC, true);
 }
