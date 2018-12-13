@@ -2,7 +2,8 @@
 
 const cards = document.querySelectorAll('.card');
 const cardWrapper = document.getElementById('card-wrapper');
-
+const closeButton = document.getElementById('close-project');
+const cardDelay = 250;
 
 const mq = {
   small:  window.matchMedia("(min-width: 400px)"),
@@ -17,6 +18,8 @@ let cardHeight = mq.medium.matches ? 480
 
 let cardScale = mq.small.matches ? 0.95 : 0.925;
 let gutter = cardWrapper.clientWidth * (1 - cardScale)/2;
+
+const childIndex = (el) => Array.from(el.parentNode.children).indexOf(el);
 
 function randomProjectContent(el) {
   let projectTitle = `<h1>${chance.animal()} ${chance.animal()}</h1>`;
@@ -37,7 +40,7 @@ function positionCard(index) {
   el.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
-function openCard(index, delay) {
+function openCard(index) {
   const el = cards[index];
   el.classList.add('expanded', 'anim-in');
   document.body.classList.add('no-scroll');
@@ -45,10 +48,16 @@ function openCard(index, delay) {
   el.style.top = `-${window.pageYOffset}px`;
   setTimeout(() => {
     el.classList.remove('anim-in');
-  }, delay);
+    if (closeButton) {
+      closeButton.classList.add('visible');
+    }
+  }, cardDelay);
 }
 
-function closeCard(index, delay) {
+function closeCard(index) {
+  if (closeButton) {
+    closeButton.classList.remove('visible');
+  }
   const el = cards[index];
   el.scrollTop = 0;
   el.classList.add('anim-out');
@@ -57,21 +66,22 @@ function closeCard(index, delay) {
   setTimeout(() => {
     el.classList.remove('expanded', 'anim-out');
     el.style.top = `0`;
-  }, delay);
+  }, cardDelay);
 }
 
 function cardExpansion(index) {
-  let delay = 250;
   if (!cards[index].classList.contains('expanded')) {
-    openCard(index, delay);
-  } else {
-    closeCard(index, delay);
+    openCard(index);
   }
 }
 
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
+  closeButton.addEventListener('click', () => {
+    const currentCard = document.querySelector('.card.expanded');
+    closeCard(childIndex(currentCard));
+  });
   for (let i = 0; i < cards.length; i++) {
     positionCard(i);
     randomProjectContent(cards[i]);
