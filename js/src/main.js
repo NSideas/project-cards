@@ -16,7 +16,10 @@ function randomProjectContent(el) {
 
 function positionCard(index) {
   const el = cards[index];
-  const y = index * cardHeight;
+  const header = document.getElementById('header');
+  const hh = header ? header.clientHeight : 0;
+  console.log(hh);
+  const y = hh + index * cardHeight;
   const margin = cardWrapper.clientWidth * 0.025;
   el.style.transform = `scaleX(.95) translateY(${y + margin * index}px)`;
 }
@@ -30,7 +33,6 @@ function openCard(index, delay) {
   document.body.classList.add('no-scroll');
   el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   el.style.top = `-${window.pageYOffset}px`;
-
   setTimeout(() => {
     el.classList.remove('anim-in');
   }, delay);

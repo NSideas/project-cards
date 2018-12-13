@@ -1,18 +1,34 @@
 @import 'normalize';
 @import 'base';
 
-$card_trans_duration: .25s;
-$card_trans: all $card_trans_duration ease-in-out;
-$card_header_scale: .95;
-$card_invert_scale: 1 + 1 - $card_header_scale;
 
 :root {
+  --card-scale: .95;
+  --gutter: .025;
   --card-height: 360px;
 }
+
+$card_header_scale: var(--card-scale);
+$card_invert_scale: calc(1 + 1 - var(--card-scale));
+$card_trans_duration: .25s;
+$card_trans: all $card_trans_duration ease-in-out;
 
 html,
 body {
   height: 100%;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  padding: 12px calc(var(--gutter) * 100%);
+}
+
+.site-title {
+  margin: 0;
+  font-weight: 700;
 }
 
 @mixin card_state__default {
@@ -62,20 +78,14 @@ body {
   }
 }
 
-.card {
-  @include card_color(#1A1A1A);
-}
-
 main,
 #card-wrapper {
   height: 100%;
 }
 
-#card-wrapper {
-  position: relative;
-}
 
 .card {
+  @include card_color(#1A1A1A);
   position: absolute;
   top: 0;
   width: 100%;
@@ -106,7 +116,10 @@ main,
   color: inherit;
   background-color: inherit;
   height: var(--card-height);
-  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  .card:not(.expanded) & {
+    cursor: pointer;
+  }
 }
 
 .card-header h1 {
@@ -132,7 +145,7 @@ main,
   z-index: 1;
   padding: 2.5% 5% 10% 5%;
   max-width: 680px;
-  transition: $card_trans;
+  transition: all $card_trans_duration ease-out;
 }
 
 .card.expanded {
@@ -141,6 +154,7 @@ main,
   z-index: 1;
   height: 100vh;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   .card-body--outer {
     height: auto;
     min-height: calc(100vh - var(--card-height));
@@ -152,6 +166,9 @@ main,
     transition: transform $card_trans_duration ease-in-out,
                 opacity $card_trans_duration ease-in-out .25s;
   }
+  .card-body--inner {
+    transition-duration: .5s;
+  }
 }
 
 .card.anim-out {
@@ -159,7 +176,7 @@ main,
 }
 
 .card.extra-margin {
-  margin-bottom: calc(var(--card-height) + 2.5%);
+  margin-bottom: calc(var(--card-height) + var(--gutter) * 100%);
 }
 
 
