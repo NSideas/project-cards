@@ -18,17 +18,17 @@ body {
 @mixin card_state__default {
   &::before {
     transform: scaleY(0);
-    opacity: 0;
   }
   .card-header h1 {
     transform: scaleX($card_invert_scale);
   }
   .card-body--outer {
     opacity: 0;
-    transform: scaleX($card_invert_scale) translateY(-10vh);
+    transform: scaleX($card_invert_scale);
   }
   .card-body--inner {
     opacity: 0;
+    transform: translateY(-10vh);
   }
 }
 
@@ -41,11 +41,29 @@ body {
   }
   .card-body--outer {
     opacity: 1;
-    transform: scaleX(1) translateY(0);
+    transform: scaleX(1);
   }
   .card-body--inner {
     opacity: 1;
+    transform: translateY(0);
   }
+}
+
+@mixin card_color($color, $invert: false) {
+  @if $invert == true {
+    color: mix($color, black, 20%);
+  } @else {
+    color: white;
+  }
+  &::before,
+  .card-header,
+  .card-body--outer {
+    background-color: $color;
+  }
+}
+
+.card {
+  @include card_color(#1A1A1A);
 }
 
 main,
@@ -61,7 +79,6 @@ main,
   position: absolute;
   top: 0;
   width: 100%;
-  color: white;
   scroll-behavior: smooth;
   transition: transform $card_trans_duration ease-in-out;
   @include card_state__default;
@@ -69,13 +86,13 @@ main,
     content: '';
     display: block;
     position: fixed;
-    top: 0;
+    top: calc(var(--card-height) - 1px);
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: #DDD;
+    height: calc(100vh - var(--card-height));
     z-index: 0;
-    transition: all .25s ease-in-out;
+    transform-origin: top;
+    transition: all $card_trans_duration ease-in-out;
   }
 }
 
@@ -85,6 +102,7 @@ main,
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   color: inherit;
   background-color: inherit;
   height: var(--card-height);
@@ -95,6 +113,8 @@ main,
   margin: 0;
   letter-spacing: .5px;
   transition: $card_trans;
+  width: 95%;
+  padding: 5%;
 }
 
 .card-body--outer {
@@ -103,19 +123,16 @@ main,
   align-items: flex-start;
   height: 0;
   overflow: hidden;
-  transition: all .25s ease-out;
+  transition: transform $card_trans_duration ease-in-out,
+              opacity $card_trans_duration ease-in-out;
 }
 
 .card-body--inner {
   position: relative;
   z-index: 1;
-  padding: 2.5% 5%;
+  padding: 2.5% 5% 10% 5%;
   max-width: 680px;
-  transition: all .25s ease-out;
-}
-
-.card::before {
-  transform-origin: top;
+  transition: $card_trans;
 }
 
 .card.expanded {
@@ -130,6 +147,13 @@ main,
   }
 }
 
+.card.anim-in {
+  .card-body--outer {
+    transition: transform $card_trans_duration ease-in-out,
+                opacity $card_trans_duration ease-in-out .25s;
+  }
+}
+
 .card.anim-out {
   @include card_state__default;
 }
@@ -139,20 +163,6 @@ main,
 }
 
 
-
-@mixin card_color($color, $invert: false) {
-  @if $invert == true {
-    color: mix($color, black, 20%);
-  }
-  .card-header,
-  .card-body--outer {
-    background-color: $color;
-  }
-}
-
-.card {
-  @include card_color(#1A1A1A);
-}
 #card-2 {
   @include card_color(#FF5F57);
 }
