@@ -3,12 +3,15 @@ const cards = document.querySelectorAll('.card');
 const cardWrapper = document.getElementById('card-wrapper');
 let cardHeight = 360;
 
-function randomContent() {
-  let html  = `<h2>${chance.sentence()}</h2>`;
-      html += `<h4>${chance.company()}</h4>`;
-      html += `<p>${chance.paragraph()}</p>`;
-      html += `<p>${chance.paragraph()}</p>`;
-  return html;
+function randomProjectContent(el) {
+  let projectTitle = `<h1>${chance.animal()} ${chance.animal()}</h1>`;
+  let projectBody  = `<h2>${chance.sentence()}</h2>`;
+      projectBody += `<h4>${chance.company()}</h4>`;
+      projectBody += `<p>${chance.paragraph()}</p>`;
+      projectBody += `<p>${chance.paragraph()}</p>`;
+
+  el.querySelector('.card-header').innerHTML = projectTitle;
+  el.querySelector('.card-body--inner').innerHTML = projectBody;
 }
 
 function positionCard(index) {
@@ -60,9 +63,8 @@ function cardExpansion(index) {
 
 for (let i = 0; i < cards.length; i++) {
   positionCard(i);
-  cards[i].querySelector('.card-body--inner').innerHTML = randomContent();
+  randomProjectContent(cards[i]);
   let cardHeader = cards[i].querySelector('.card-header');
-  cardHeader.querySelector('h1').innerHTML = `${chance.animal()} ${chance.animal()}`;
   cardHeader.addEventListener('click', (e) => {
     e.preventDefault();
     cardExpansion(i);
