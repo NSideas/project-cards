@@ -2542,6 +2542,13 @@
 		"sC": 1,
 		"tS": 0
 		},
+	"/kit/_card.kit": {
+		"cB": 0,
+		"ft": 2048,
+		"oA": 1,
+		"oAP": "/kit/_card.html",
+		"oF": 0
+		},
 	"/kit/_footer.kit": {
 		"cB": 0,
 		"ft": 2048,
