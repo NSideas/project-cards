@@ -69,12 +69,6 @@ function closeCard(index) {
   }, cardDelay);
 }
 
-function cardExpansion(index) {
-  if (!cards[index].classList.contains('expanded')) {
-    openCard(index);
-  }
-}
-
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
@@ -86,9 +80,10 @@ function setUpCards() {
     positionCard(i);
     randomProjectContent(cards[i]);
     let cardHeader = cards[i].querySelector('.card-header');
-    cardHeader.addEventListener('click', (e) => {
-      e.preventDefault();
-      cardExpansion(i);
+    cardHeader.addEventListener('click', () => {
+      if (!cards[i].classList.contains('expanded')) {
+        openCard(i);
+      }
     });
   }
 }
