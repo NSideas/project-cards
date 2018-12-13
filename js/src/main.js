@@ -39,9 +39,6 @@ function positionCard(index) {
 
 function openCard(index, delay) {
   const el = cards[index];
-  if (index === cards.length - 1) {
-    cards[index - 1].classList.add('extra-margin');
-  }
   el.classList.add('expanded', 'anim-in');
   document.body.classList.add('no-scroll');
   el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
@@ -60,9 +57,6 @@ function closeCard(index, delay) {
   setTimeout(() => {
     el.classList.remove('expanded', 'anim-out');
     el.style.top = `0`;
-    if (index === cards.length - 1) {
-      cards[index - 1].classList.remove('extra-margin');
-    }
   }, delay);
 }
 
@@ -75,12 +69,18 @@ function cardExpansion(index) {
   }
 }
 
-for (let i = 0; i < cards.length; i++) {
-  positionCard(i);
-  randomProjectContent(cards[i]);
-  let cardHeader = cards[i].querySelector('.card-header');
-  cardHeader.addEventListener('click', (e) => {
-    e.preventDefault();
-    cardExpansion(i);
-  });
+function setUpCards() {
+  const wrapperHeight = cards.length * (cardHeight + gutter);
+  cardWrapper.style.height = `${wrapperHeight}px`;
+  for (let i = 0; i < cards.length; i++) {
+    positionCard(i);
+    randomProjectContent(cards[i]);
+    let cardHeader = cards[i].querySelector('.card-header');
+    cardHeader.addEventListener('click', (e) => {
+      e.preventDefault();
+      cardExpansion(i);
+    });
+  }
 }
+
+setUpCards();

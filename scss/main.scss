@@ -9,6 +9,7 @@ $large: 1000px;
   --card-scale: .925;
   --gutter: calc((1 - var(--card-scale))/2 );
   --card-height: 300px;
+  --header-height: 60px;
   @media (min-width: $small) {
     --card-scale: .95;
     --card-height: 360px;
@@ -32,13 +33,17 @@ header {
   position: fixed;
   top: 0;
   z-index: 20;
+  display: flex;
+  align-items: center;
   width: 100%;
+  height: var(--header-height);
   padding: 12px calc(var(--gutter) * 100%);
 }
 
 .site-title {
   margin: 0;
   font-weight: 700;
+  line-height: 1;
 }
 
 @mixin card_state__default {
@@ -89,7 +94,7 @@ header {
 }
 
 #card-wrapper {
-  height: 100%;
+  margin-top: var(--header-height);
 }
 
 .card {
@@ -185,11 +190,6 @@ header {
 .card.anim-out {
   @include card_state__default;
 }
-
-.card.extra-margin {
-  margin-bottom: calc(var(--card-height) + var(--gutter) * 100%);
-}
-
 
 #card-2 {
   @include card_color(#FF5F57);
