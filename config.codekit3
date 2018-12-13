@@ -2580,6 +2580,34 @@
 		"oAP": "/index.html",
 		"oF": 2
 		},
+	"/pages/project-1.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "/pages/project-1.html",
+		"oF": 0
+		},
+	"/pages/project-2.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "/pages/project-2.html",
+		"oF": 0
+		},
+	"/pages/project-3.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "/pages/project-3.html",
+		"oF": 0
+		},
+	"/pages/project-4.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "/pages/project-4.html",
+		"oF": 0
+		},
 	"/scss/_base.scss": {
 		"aP": 0,
 		"bl": 0,
@@ -3753,11 +3781,11 @@
 			"optionString": "{'allowShortCircuit': false, 'allowTernary': false, 'allowTaggedTemplates': false}"
 			},
 		"no-unused-labels": {
-			"active": 1,
+			"active": 0,
 			"optionString": ""
 			},
 		"no-unused-vars": {
-			"active": 1,
+			"active": 0,
 			"optionString": "{'vars': 'all', 'args': 'after-used', 'caughtErrors': 'none', 'ignoreRestSiblings': false}"
 			},
 		"no-use-before-define": {
