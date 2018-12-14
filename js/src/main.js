@@ -70,13 +70,15 @@ function closeCard(index) {
 }
 
 function fetchProjectInfo(index, project) {
+  openCard(index);
   fetch(project).then((response) => {
     return response.text();
   }).then((content) => {
     const cardBody = cards[index].querySelector('.card-body--outer');
     cardBody.innerHTML += content;
-    cards[index].classList.add('content-loaded');
-    openCard(index);
+    setTimeout(() => {
+      cards[index].classList.add('content-loaded');
+    }, 125);
   }).catch((err) => {
     console.log('Fetch Error', err);
   });
@@ -94,12 +96,10 @@ function setUpCards() {
     let cardHeader = cards[i].querySelector('.card-header');
     let project = cardHeader.getAttribute('href');
     cardHeader.addEventListener('click', () => {
-      if (!cards[i].classList.contains('expanded')) {
-        if (!cards[i].classList.contains('content-loaded')) {
-          fetchProjectInfo(i, project);
-        } else {
-          openCard(i);
-        }
+      if (!cards[i].classList.contains('content-loaded')) {
+        fetchProjectInfo(i, project);
+      } else if (!cards[i].classList.contains('expanded')) {
+        openCard(i);
       }
     });
   }

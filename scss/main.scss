@@ -74,9 +74,11 @@ header {
     opacity: 1;
     transform: scaleX(1);
   }
-  .card-body--inner {
-    opacity: 1;
-    transform: translateY(0);
+  &.content-loaded {
+    .card-body--inner {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -158,6 +160,7 @@ header {
   z-index: 1;
   padding: 2.5% 5% 25% 5%;
   max-width: 680px;
+  opacity: 0;
   transition: all $card_trans_duration ease-out;
   @media (min-width: $small) {
     padding-bottom: 15%;
@@ -199,6 +202,9 @@ header {
     transition: transform $card_trans_duration ease-in-out,
                 opacity $card_trans_duration ease-in-out .25s;
   }
+}
+
+.card.content-loaded {
   .card-body--inner {
     transition-duration: .5s;
   }
