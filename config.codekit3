@@ -2651,6 +2651,14 @@
 "hooks": [
 	],
 "manualImportLinks": {
+	"/js/src/main.js": [
+		{
+			"followForSyntaxChecking": 0,
+			"linkedFileAbbreviatedPath": "/bower_components/chance/chance.js",
+			"position": 0,
+			"type": 0
+			}
+		]
 	},
 "projectAttributes": {
 	"creationDate": 566248360.34870005,
@@ -3256,10 +3264,6 @@
 			"active": 0,
 			"optionString": "'always', {exceptAfterSingleLine: false}"
 			},
-		"max-classes-per-file": {
-			"active": 0,
-			"optionString": "1"
-			},
 		"max-depth": {
 			"active": 0,
 			"optionString": "{'max': 4}"
@@ -3271,10 +3275,6 @@
 		"max-lines": {
 			"active": 0,
 			"optionString": "{'max': 300, 'skipBlankLines': true, 'skipComments': true}"
-			},
-		"max-lines-per-function": {
-			"active": 0,
-			"optionString": "{'max': 50, 'skipBlankLines': true, 'skipComments': true, 'IIFEs': false}"
 			},
 		"max-nested-callbacks": {
 			"active": 0,
@@ -3320,10 +3320,6 @@
 			"active": 0,
 			"optionString": ""
 			},
-		"no-async-promise-executor": {
-			"active": 0,
-			"optionString": ""
-			},
 		"no-await-in-loop": {
 			"active": 0,
 			"optionString": ""
@@ -3342,6 +3338,10 @@
 			},
 		"no-case-declarations": {
 			"active": 1,
+			"optionString": ""
+			},
+		"no-catch-shadow": {
+			"active": false,
 			"optionString": ""
 			},
 		"no-class-assign": {
@@ -3539,10 +3539,6 @@
 		"no-magic-numbers": {
 			"active": 0,
 			"optionString": "{'ignore': [], 'ignoreArrayIndexes': true, 'enforceConst': false, 'detectObjects': false}"
-			},
-		"no-misleading-character-class": {
-			"active": 0,
-			"optionString": ""
 			},
 		"no-mixed-operators": {
 			"active": 0,
@@ -3781,11 +3777,11 @@
 			"optionString": "{'allowShortCircuit': false, 'allowTernary': false, 'allowTaggedTemplates': false}"
 			},
 		"no-unused-labels": {
-			"active": 0,
+			"active": 1,
 			"optionString": ""
 			},
 		"no-unused-vars": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'vars': 'all', 'args': 'after-used', 'caughtErrors': 'none', 'ignoreRestSiblings': false}"
 			},
 		"no-use-before-define": {
@@ -3900,10 +3896,6 @@
 			"active": 0,
 			"optionString": ""
 			},
-		"prefer-object-spread": {
-			"active": 0,
-			"optionString": ""
-			},
 		"prefer-promise-reject-errors": {
 			"active": 0,
 			"optionString": "{'allowEmptyReject': false}"
@@ -3932,10 +3924,6 @@
 			"active": 0,
 			"optionString": "'always'"
 			},
-		"require-atomic-updates": {
-			"active": 0,
-			"optionString": ""
-			},
 		"require-await": {
 			"active": 0,
 			"optionString": ""
@@ -3943,10 +3931,6 @@
 		"require-jsdoc": {
 			"active": 0,
 			"optionString": "{'require': {'FunctionDeclaration': true, 'MethodDefinition': false, 'ClassDeclaration': false, 'ArrowFunctionExpression': false}}"
-			},
-		"require-unicode-regexp": {
-			"active": 0,
-			"optionString": ""
 			},
 		"require-yield": {
 			"active": 1,
@@ -4065,7 +4049,7 @@
 	"externalServerAddress": "http://localhost:8888",
 	"gitIgnoreBuildFolder": 1,
 	"hideConfigFile": 0,
-	"jsCheckerReservedNamesString": "console, chance, fetch",
+	"jsCheckerReservedNamesString": "console, chance",
 	"jsHintFlags2": {
 		"asi": {
 			"active": 0,

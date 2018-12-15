@@ -76,6 +76,8 @@ function fetchProjectInfo(index, project) {
   }).then((content) => {
     const cardBody = cards[index].querySelector('.card-body--outer');
     cardBody.innerHTML += content;
+    const stateObj = { page: index };
+    history.pushState(stateObj, "project page", project);
     setTimeout(() => {
       cards[index].classList.add('content-loaded');
     }, 125);
@@ -84,13 +86,15 @@ function fetchProjectInfo(index, project) {
   });
 }
 
+function closeCurrentCard() {
+  const currentCard = document.querySelector('.card.expanded');
+  closeCard(childIndex(currentCard));
+}
+
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
-  closeButton.addEventListener('click', () => {
-    const currentCard = document.querySelector('.card.expanded');
-    closeCard(childIndex(currentCard));
-  });
+  closeButton.addEventListener('click',;
   for (let i = 0; i < cards.length; i++) {
     positionCard(i);
     let cardHeader = cards[i].querySelector('.card-header');
@@ -106,3 +110,7 @@ function setUpCards() {
 }
 
 setUpCards();
+
+window.onpopstate = function(event) {
+  console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+};
