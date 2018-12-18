@@ -80,7 +80,7 @@ function closeCard(card) {
 
 function defaultHistoryState() {
   const stateObj = { content: 'project index' };
-  history.pushState(stateObj, document.title, window.location.origin);
+  history.pushState(stateObj, document.title, 'index.html');
 }
 
 function fetchProjectInfo(card, project) {
