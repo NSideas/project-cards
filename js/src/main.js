@@ -21,6 +21,13 @@ let gutter = cardWrapper.clientWidth * (1 - cardScale)/2;
 
 const childIndex = (el) => Array.from(el.parentNode.children).indexOf(el);
 
+function getUrlParameter(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  const results = regex.exec(location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
 function randomProjectContent(el) {
   let projectTitle = `<h1>${chance.animal()} ${chance.animal()}</h1>`;
   let projectBody  = `<h2>${chance.sentence()}</h2>`;
@@ -42,8 +49,7 @@ function positionCard(card) {
 
 function openCard(card, project, push) {
   if (push) {
-    const index = childIndex(card);
-    const stateObj = { page: index };
+    const stateObj = { content: project };
     history.pushState(stateObj, 'project page', `?content=${project}`);
   }
   card.classList.add('expanded', 'anim-in');
@@ -73,8 +79,8 @@ function closeCard(card) {
 }
 
 function defaultHistoryState() {
-  const stateObj = { page: 'project index' };
-  history.pushState(stateObj, document.title, window.location.href);
+  const stateObj = { content: 'project index' };
+  history.pushState(stateObj, document.title, window.location.origin);
 }
 
 function fetchProjectInfo(card, project) {
@@ -100,7 +106,10 @@ function closeCurrentCard() {
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
-  defaultHistoryState();
+  let createPushState = true;
+  if (!getUrlParameter('content')) {
+    defaultHistoryState();
+  }
   for (let card of cards) {
     positionCard(card);
     let cardHeader = card.querySelector('.card-header');
@@ -118,19 +127,14 @@ function setUpCards() {
 setUpCards();
 
 window.addEventListener('popstate', (e) => {
-  if (e.state.page === 'project index') {
+  console.log('Popstate fired!');
+  if (e.state.content === 'project index') {
     closeCurrentCard();
   } else {
-    openCard(cards[e.state.page], `project-${e.state.page + 1}`, false);
+    const project = getUrlParameter('content');
+    openCard(document.getElementById(project), project, false);
   }
 });
-
-function getUrlParameter(name) {
-  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-  const results = regex.exec(location.search);
-  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-};
 
 function pageLoad() {
   if (window.location.search) {
