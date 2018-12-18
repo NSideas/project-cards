@@ -125,6 +125,8 @@ function setUpCards() {
 }
 
 setUpCards();
+cardWrapper.classList.add('visible');
+cardWrapper.classList.remove('no-trans');
 
 window.addEventListener('popstate', (e) => {
   console.log('Popstate fired!');

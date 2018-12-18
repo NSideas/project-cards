@@ -97,6 +97,11 @@ header {
 
 #card-wrapper {
   margin-top: var(--header-height);
+  opacity: 0;
+  transition: opacity .5s ease;
+  &.visible {
+    opacity: 1;
+  }
 }
 
 .card {
@@ -106,6 +111,9 @@ header {
   width: 100%;
   scroll-behavior: smooth;
   transition: transform $card_trans_duration ease-in-out;
+  .no-trans & {
+    transition: none;
+  }
   @include card_state__default;
   &::before {
     content: '';
