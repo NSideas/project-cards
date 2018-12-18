@@ -69,6 +69,11 @@ function closeCard(index) {
   }, cardDelay);
 }
 
+function defaultHistoryState() {
+  const stateObj = { page: "project index" };
+  history.replaceState(stateObj, document.title, window.location.href);
+}
+
 function fetchProjectInfo(index, project) {
   openCard(index);
   fetch(project).then((response) => {
@@ -89,12 +94,13 @@ function fetchProjectInfo(index, project) {
 function closeCurrentCard() {
   const currentCard = document.querySelector('.card.expanded');
   closeCard(childIndex(currentCard));
+  defaultHistoryState();
 }
 
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
-  closeButton.addEventListener('click',;
+  defaultHistoryState();
   for (let i = 0; i < cards.length; i++) {
     positionCard(i);
     let cardHeader = cards[i].querySelector('.card-header');
@@ -111,6 +117,11 @@ function setUpCards() {
 
 setUpCards();
 
-window.onpopstate = function(event) {
-  console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-};
+window.addEventListener('popstate', (e) => {
+  console.log(e.state);
+  if (e.state.page === "project index") {
+    closeCurrentCard();
+  } else {
+    openCard(e.state.page);
+  }
+});
