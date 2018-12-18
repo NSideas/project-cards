@@ -85,7 +85,7 @@ function defaultHistoryState() {
 
 function fetchProjectInfo(card, project) {
   openCard(card, project, true);
-  fetch(`/pages/${project}.html`).then((response) => {
+  fetch(`./pages/${project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
     const cardBody = card.querySelector('.card-body--outer');
