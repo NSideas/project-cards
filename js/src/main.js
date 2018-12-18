@@ -40,8 +40,10 @@ function positionCard(index) {
   el.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
-function openCard(index) {
+function openCard(index, project) {
   const el = cards[index];
+  const stateObj = { page: index };
+  history.pushState(stateObj, 'project page', `?project=${project}`);
   el.classList.add('expanded', 'anim-in');
   document.body.classList.add('no-scroll');
   el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
@@ -70,19 +72,17 @@ function closeCard(index) {
 }
 
 function defaultHistoryState() {
-  const stateObj = { page: "project index" };
+  const stateObj = { page: 'project index' };
   history.replaceState(stateObj, document.title, window.location.href);
 }
 
 function fetchProjectInfo(index, project) {
-  openCard(index);
-  fetch(project).then((response) => {
+  openCard(index, project);
+  fetch(`/pages/${project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
     const cardBody = cards[index].querySelector('.card-body--outer');
     cardBody.innerHTML += content;
-    const stateObj = { page: index };
-    history.pushState(stateObj, "project page", project);
     setTimeout(() => {
       cards[index].classList.add('content-loaded');
     }, 125);
@@ -109,7 +109,7 @@ function setUpCards() {
       if (!cards[i].classList.contains('content-loaded')) {
         fetchProjectInfo(i, project);
       } else if (!cards[i].classList.contains('expanded')) {
-        openCard(i);
+        openCard(i, project);
       }
     });
   }
@@ -119,7 +119,7 @@ setUpCards();
 
 window.addEventListener('popstate', (e) => {
   console.log(e.state);
-  if (e.state.page === "project index") {
+  if (e.state.page === 'project index') {
     closeCurrentCard();
   } else {
     openCard(e.state.page);
