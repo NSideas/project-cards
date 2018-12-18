@@ -32,59 +32,60 @@ function randomProjectContent(el) {
   el.querySelector('.card-body--inner').innerHTML = projectBody;
 }
 
-function positionCard(index) {
-  const el = cards[index];
+function positionCard(card) {
+  const index = childIndex(card);
   const header = document.getElementById('header');
   const hh = header ? header.clientHeight : 0;
   const y = hh + index * cardHeight;
-  el.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
+  card.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
-function openCard(index, project) {
-  const el = cards[index];
-  const stateObj = { page: index };
-  history.pushState(stateObj, 'project page', `?project=${project}`);
-  el.classList.add('expanded', 'anim-in');
+function openCard(card, project, push) {
+  if (push) {
+    const index = childIndex(card);
+    const stateObj = { page: index };
+    history.pushState(stateObj, 'project page', `?content=${project}`);
+  }
+  card.classList.add('expanded', 'anim-in');
   document.body.classList.add('no-scroll');
-  el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
-  el.style.top = `-${window.pageYOffset}px`;
+  card.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
+  card.style.top = `-${window.pageYOffset}px`;
   setTimeout(() => {
-    el.classList.remove('anim-in');
+    card.classList.remove('anim-in');
     if (closeButton) {
       closeButton.classList.add('visible');
     }
   }, cardDelay);
 }
 
-function closeCard(index) {
+function closeCard(card) {
   if (closeButton) {
     closeButton.classList.remove('visible');
   }
-  const el = cards[index];
-  el.scrollTop = 0;
-  el.classList.add('anim-out');
+  card.scrollTop = 0;
+  card.classList.add('anim-out');
   document.body.classList.remove('no-scroll');
-  positionCard(index);
+  positionCard(card);
   setTimeout(() => {
-    el.classList.remove('expanded', 'anim-out');
-    el.style.top = `0`;
+    card.classList.remove('expanded', 'anim-out');
+    card.style.top = `0`;
   }, cardDelay);
 }
 
 function defaultHistoryState() {
   const stateObj = { page: 'project index' };
-  history.replaceState(stateObj, document.title, window.location.href);
+  history.pushState(stateObj, document.title, window.location.href);
 }
 
-function fetchProjectInfo(index, project) {
-  openCard(index, project);
+function fetchProjectInfo(card, project) {
+  openCard(card, project, true);
   fetch(`/pages/${project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
-    const cardBody = cards[index].querySelector('.card-body--outer');
+    const cardBody = card.querySelector('.card-body--outer');
     cardBody.innerHTML += content;
     setTimeout(() => {
-      cards[index].classList.add('content-loaded');
+      card.classList.add('content-loaded');
     }, 125);
   }).catch((err) => {
     console.log('Fetch Error', err);
@@ -93,23 +94,22 @@ function fetchProjectInfo(index, project) {
 
 function closeCurrentCard() {
   const currentCard = document.querySelector('.card.expanded');
-  closeCard(childIndex(currentCard));
-  defaultHistoryState();
+  closeCard(currentCard);
 }
 
 function setUpCards() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
   defaultHistoryState();
-  for (let i = 0; i < cards.length; i++) {
-    positionCard(i);
-    let cardHeader = cards[i].querySelector('.card-header');
+  for (let card of cards) {
+    positionCard(card);
+    let cardHeader = card.querySelector('.card-header');
     let project = cardHeader.getAttribute('href');
     cardHeader.addEventListener('click', () => {
-      if (!cards[i].classList.contains('content-loaded')) {
-        fetchProjectInfo(i, project);
-      } else if (!cards[i].classList.contains('expanded')) {
-        openCard(i, project);
+      if (!card.classList.contains('content-loaded')) {
+        fetchProjectInfo(card, project);
+      } else if (!card.classList.contains('expanded')) {
+        openCard(card, project, true);
       }
     });
   }
@@ -118,10 +118,9 @@ function setUpCards() {
 setUpCards();
 
 window.addEventListener('popstate', (e) => {
-  console.log(e.state);
   if (e.state.page === 'project index') {
     closeCurrentCard();
   } else {
-    openCard(e.state.page);
+    openCard(cards[e.state.page], `project-${e.state.page + 1}`, false);
   }
 });
