@@ -216,12 +216,12 @@ header {
 
 
 
-#card-2 {
+#project-2 {
   @include card_color(#FF5F57);
 }
-#card-3 {
+#project-3 {
   @include card_color(#C4C4C4, true);
 }
-#card-4 {
+#project-4 {
   @include card_color(#17E0BC, true);
 }

@@ -124,3 +124,19 @@ window.addEventListener('popstate', (e) => {
     openCard(cards[e.state.page], `project-${e.state.page + 1}`, false);
   }
 });
+
+function getUrlParameter(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  const results = regex.exec(location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
+function pageLoad() {
+  if (window.location.search) {
+    const project = getUrlParameter('content');
+    fetchProjectInfo(document.getElementById(project), project, true);
+  }
+}
+
+window.addEventListener('load', pageLoad);
