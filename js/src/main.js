@@ -10,6 +10,15 @@ const debounce = (fn, time) => {
   };
 };
 
+const childIndex = (el) => Array.from(el.parentNode.children).indexOf(el);
+
+function getUrlParameter(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  const results = regex.exec(location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
 const cards = document.querySelectorAll('.card');
 const cardWrapper = document.getElementById('card-wrapper');
 const closeButton = document.getElementById('close-project');
@@ -37,15 +46,6 @@ function setWrapperHeight() {
   cardWrapper.style.height = `${wrapperHeight}px`;
 }
 
-const childIndex = (el) => Array.from(el.parentNode.children).indexOf(el);
-
-function getUrlParameter(name) {
-  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-  const results = regex.exec(location.search);
-  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-
 function randomProjectContent(el) {
   let projectTitle = `<h1>${chance.animal()} ${chance.animal()}</h1>`;
   let projectBody  = `<h2>${chance.sentence()}</h2>`;
@@ -65,6 +65,20 @@ function positionCard(card) {
   card.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
+function fetchProjectInfo(card, project) {
+  fetch(`./pages/${project}.html`).then((response) => {
+    return response.text();
+  }).then((content) => {
+    const cardBody = card.querySelector('.card-body--outer');
+    cardBody.innerHTML += content;
+    setTimeout(() => {
+      card.classList.add('content-loaded');
+    }, 125);
+  }).catch((err) => {
+    console.log('Fetch Error', err);
+  });
+}
+
 function openCard(card, project, push) {
   if (push) {
     const stateObj = { content: project };
@@ -80,6 +94,9 @@ function openCard(card, project, push) {
       closeButton.classList.add('visible');
     }
   }, cardDelay);
+  if (!card.classList.contains('content-loaded')) {
+    fetchProjectInfo(card, project);
+  }
 }
 
 function closeCard(card) {
@@ -96,35 +113,19 @@ function closeCard(card) {
   }, cardDelay);
 }
 
-function defaultHistoryState() {
-  const stateObj = { content: 'project index' };
-  history.pushState(stateObj, document.title, 'index.html');
-}
-
-function fetchProjectInfo(card, project) {
-  openCard(card, project, true);
-  fetch(`./pages/${project}.html`).then((response) => {
-    return response.text();
-  }).then((content) => {
-    const cardBody = card.querySelector('.card-body--outer');
-    cardBody.innerHTML += content;
-    setTimeout(() => {
-      card.classList.add('content-loaded');
-    }, 125);
-  }).catch((err) => {
-    console.log('Fetch Error', err);
-  });
-}
-
 function closeCurrentCard() {
   const currentCard = document.querySelector('.card.expanded');
   closeCard(currentCard);
 }
 
+function defaultHistoryState() {
+  const stateObj = { content: 'project index' };
+  history.replaceState(stateObj, document.title, 'index.html');
+}
+
 function setUpCards() {
   calculateScale();
   setWrapperHeight();
-  let createPushState = true;
   if (!getUrlParameter('content')) {
     defaultHistoryState();
   }
@@ -133,9 +134,7 @@ function setUpCards() {
     let cardHeader = card.querySelector('.card-header');
     let project = cardHeader.getAttribute('href');
     cardHeader.addEventListener('click', () => {
-      if (!card.classList.contains('content-loaded')) {
-        fetchProjectInfo(card, project);
-      } else if (!card.classList.contains('expanded')) {
+      if (!card.classList.contains('expanded')) {
         openCard(card, project, true);
       }
     });
@@ -150,30 +149,24 @@ function resetCards() {
   }
 }
 
-setUpCards();
-setTimeout(() => {
-  cardWrapper.classList.add('visible');
-  cardWrapper.classList.remove('no-trans');
-}, cardDelay);
-
 const popStateHandler = (event) => {
   console.log('Popstate fired!');
   if (event.state.content === 'project index') {
     closeCurrentCard();
-  } else {
+  } else if (getUrlParameter('content')) {
     const project = getUrlParameter('content');
     openCard(document.getElementById(project), project, false);
   }
 };
 
-window.addEventListener('popstate', popStateHandler);
-
 function pageLoad() {
   if (window.location.search) {
     const project = getUrlParameter('content');
-    fetchProjectInfo(document.getElementById(project), project, true);
+    openCard(document.getElementById(project), project, false);
   }
 }
+
+window.addEventListener('popstate', popStateHandler);
 
 window.addEventListener('load', pageLoad);
 
@@ -181,3 +174,9 @@ window.addEventListener('resize', debounce(() => {
   console.log('Window resize');
   resetCards();
 }, 100));
+
+setUpCards();
+setTimeout(() => {
+  cardWrapper.classList.add('visible');
+  cardWrapper.classList.remove('no-trans');
+}, cardDelay);
