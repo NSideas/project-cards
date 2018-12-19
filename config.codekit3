@@ -2552,6 +2552,16 @@
 		"sC": 1,
 		"tS": 0
 		},
+	"/js/src/vendor/bodyScrollLock.js": {
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 1,
+		"oAP": "/js/src/vendor/min/bodyScrollLock.min.js",
+		"oF": 0,
+		"sC": 1,
+		"tS": 1
+		},
 	"/kit/_card.kit": {
 		"cB": 0,
 		"ft": 2048,

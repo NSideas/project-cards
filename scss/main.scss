@@ -29,6 +29,7 @@ body {
   height: 100%;
 }
 
+
 header {
   position: fixed;
   top: 0;
@@ -100,7 +101,8 @@ header {
 }
 
 #card-wrapper {
-  margin-top: var(--header-height);
+  box-sizing: content-box;
+  padding-top: var(--header-height);
   opacity: 0;
   transition: opacity .5s ease;
   &.visible {

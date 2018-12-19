@@ -85,9 +85,9 @@ function openCard(card, project, push) {
     history.pushState(stateObj, 'project page', `?content=${project}`);
   }
   card.classList.add('expanded', 'anim-in');
-  document.body.classList.add('no-scroll');
   card.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   card.style.top = `-${window.pageYOffset}px`;
+  bodyScrollLock.disableBodyScroll(card);
   setTimeout(() => {
     card.classList.remove('anim-in');
     if (closeButton) {
@@ -105,7 +105,7 @@ function closeCard(card) {
   }
   card.scrollTop = 0;
   card.classList.add('anim-out');
-  document.body.classList.remove('no-scroll');
+  bodyScrollLock.enableBodyScroll(card);
   positionCard(card);
   setTimeout(() => {
     card.classList.remove('expanded', 'anim-out');
