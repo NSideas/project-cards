@@ -1,4 +1,14 @@
 
+const debounce = (fn, time) => {
+  let timeout;
+
+  return function() {
+    const functionCall = () => fn.apply(this, arguments);
+
+    clearTimeout(timeout);
+    timeout = setTimeout(functionCall, time);
+  };
+};
 
 const cards = document.querySelectorAll('.card');
 const cardWrapper = document.getElementById('card-wrapper');
@@ -11,13 +21,21 @@ const mq = {
   large:  window.matchMedia("(min-width: 1000px)")
 };
 
+let cardHeight, cardScale, gutter;
 
-let cardHeight = mq.medium.matches ? 480
-               : mq.small.matches ? 360
-               : 300;
+function calculateScale() {
+  cardHeight = mq.medium.matches ? 480
+             : mq.small.matches ? 360
+             : 300;
 
-let cardScale = mq.small.matches ? 0.95 : 0.925;
-let gutter = cardWrapper.clientWidth * (1 - cardScale)/2;
+  cardScale = mq.small.matches ? 0.95 : 0.925;
+  gutter = cardWrapper.clientWidth * (1 - cardScale)/2;
+}
+
+function setWrapperHeight() {
+  const wrapperHeight = cards.length * (cardHeight + gutter);
+  cardWrapper.style.height = `${wrapperHeight}px`;
+}
 
 const childIndex = (el) => Array.from(el.parentNode.children).indexOf(el);
 
@@ -104,8 +122,8 @@ function closeCurrentCard() {
 }
 
 function setUpCards() {
-  const wrapperHeight = cards.length * (cardHeight + gutter);
-  cardWrapper.style.height = `${wrapperHeight}px`;
+  calculateScale();
+  setWrapperHeight();
   let createPushState = true;
   if (!getUrlParameter('content')) {
     defaultHistoryState();
@@ -124,19 +142,31 @@ function setUpCards() {
   }
 }
 
-setUpCards();
-cardWrapper.classList.add('visible');
-cardWrapper.classList.remove('no-trans');
+function resetCards() {
+  calculateScale();
+  setWrapperHeight();
+  for (let card of cards) {
+    positionCard(card);
+  }
+}
 
-window.addEventListener('popstate', (e) => {
+setUpCards();
+setTimeout(() => {
+  cardWrapper.classList.add('visible');
+  cardWrapper.classList.remove('no-trans');
+}, cardDelay);
+
+const popStateHandler = (event) => {
   console.log('Popstate fired!');
-  if (e.state.content === 'project index') {
+  if (event.state.content === 'project index') {
     closeCurrentCard();
   } else {
     const project = getUrlParameter('content');
     openCard(document.getElementById(project), project, false);
   }
-});
+};
+
+window.addEventListener('popstate', popStateHandler);
 
 function pageLoad() {
   if (window.location.search) {
@@ -146,3 +176,8 @@ function pageLoad() {
 }
 
 window.addEventListener('load', pageLoad);
+
+window.addEventListener('resize', debounce(() => {
+  console.log('Window resize');
+  resetCards();
+}, 100));
