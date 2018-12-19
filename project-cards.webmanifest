@@ -1,6 +1,6 @@
 {
     "name": "Project Cards",
-    "short_name": "project-cards",
+    "short_name": "projectcards",
     "description": "Progressive Web App that loads html templates upon request.",
     "icons": [
         {
