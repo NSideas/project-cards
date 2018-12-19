@@ -2608,6 +2608,13 @@
 		"oAP": "/pages/project-4.html",
 		"oF": 0
 		},
+	"/project-cards.webmanifest": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "/project-cards.webmanifest",
+		"oF": 0
+		},
 	"/scss/_base.scss": {
 		"aP": 0,
 		"bl": 0,
