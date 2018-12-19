@@ -88,6 +88,9 @@ function openCard(card, project, push) {
   card.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   card.style.top = `-${window.pageYOffset}px`;
   bodyScrollLock.disableBodyScroll(card);
+  const style = getComputedStyle(card.querySelector('.card-header'));
+  const backgroundColor = style.backgroundColor;
+  console.log(backgroundColor);
   setTimeout(() => {
     card.classList.remove('anim-in');
     if (closeButton) {
