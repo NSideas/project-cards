@@ -2583,6 +2583,13 @@
 		"oAP": "/kit/_header.html",
 		"oF": 0
 		},
+	"/kit/_project-card.kit": {
+		"cB": 0,
+		"ft": 2048,
+		"oA": 1,
+		"oAP": "/kit/_project-card.html",
+		"oF": 0
+		},
 	"/kit/index.kit": {
 		"cB": 0,
 		"ft": 2048,

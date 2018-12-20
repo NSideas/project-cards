@@ -174,7 +174,6 @@ window.addEventListener('popstate', popStateHandler);
 window.addEventListener('load', pageLoad);
 
 window.addEventListener('resize', debounce(() => {
-  console.log('Window resize');
   resetCards();
 }, 100));
 
