@@ -142,12 +142,13 @@ header {
   align-items: center;
   justify-content: center;
   text-align: center;
+  text-decoration: none;
   color: inherit;
   background-color: inherit;
   height: var(--card-height);
   -webkit-tap-highlight-color: rgba(0,0,0,0);
-  .card:not(.expanded) & {
-    cursor: pointer;
+  .card.expanded & {
+    cursor: default;
   }
 }
 

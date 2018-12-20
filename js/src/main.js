@@ -19,6 +19,7 @@ function getUrlParameter(name) {
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
+const siteTitle = document.querySelector('.site-title');
 const cards = document.querySelectorAll('.card');
 const cardWrapper = document.getElementById('card-wrapper');
 const closeButton = document.getElementById('close-project');
@@ -58,6 +59,7 @@ function randomProjectContent(el) {
 }
 
 function positionCard(card) {
+  console.log('Positioning card');
   const index = childIndex(card);
   const header = document.getElementById('header');
   const hh = header ? header.clientHeight : 0;
@@ -66,6 +68,7 @@ function positionCard(card) {
 }
 
 function fetchProjectInfo(card, project) {
+  console.log('Fetching project info');
   fetch(`./pages/${project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
@@ -80,6 +83,7 @@ function fetchProjectInfo(card, project) {
 }
 
 function openCard(card, project, push) {
+  console.log('Opening card');
   if (push) {
     const stateObj = { content: project };
     history.pushState(stateObj, 'project page', `?content=${project}`);
@@ -90,7 +94,7 @@ function openCard(card, project, push) {
   bodyScrollLock.disableBodyScroll(card);
   const style = getComputedStyle(card.querySelector('.card-header'));
   const backgroundColor = style.backgroundColor;
-  console.log(backgroundColor);
+  // console.log(backgroundColor);
   setTimeout(() => {
     card.classList.remove('anim-in');
     if (closeButton) {
@@ -121,12 +125,17 @@ function closeCurrentCard() {
   closeCard(currentCard);
 }
 
-function defaultHistoryState() {
+function defaultHistoryState(push) {
   const stateObj = { content: 'project index' };
-  history.replaceState(stateObj, document.title, 'index.html');
+  if (push) {
+    history.pushState(stateObj, document.title, 'index.html');
+  } else {
+    history.replaceState(stateObj, document.title, 'index.html');
+  }
 }
 
 function setUpCards() {
+  console.log('Setting up cards');
   calculateScale();
   setWrapperHeight();
   if (!getUrlParameter('content')) {
@@ -135,8 +144,10 @@ function setUpCards() {
   for (let card of cards) {
     positionCard(card);
     let cardHeader = card.querySelector('.card-header');
-    let project = cardHeader.getAttribute('href');
-    cardHeader.addEventListener('click', () => {
+    let project = card.getAttribute('id');
+    // project = project.split('=')[1];
+    cardHeader.addEventListener('click', (e) => {
+      e.preventDefault();
       if (!card.classList.contains('expanded')) {
         openCard(card, project, true);
       }
@@ -148,7 +159,9 @@ function resetCards() {
   calculateScale();
   setWrapperHeight();
   for (let card of cards) {
-    positionCard(card);
+    if (!card.classList.contains('expanded')) {
+      positionCard(card);
+    }
   }
 }
 
@@ -168,6 +181,19 @@ function pageLoad() {
     openCard(document.getElementById(project), project, false);
   }
 }
+
+function homeBtnHandler(e) {
+  e.preventDefault();
+  console.log('click');
+  if (getUrlParameter('content') != '') {
+    closeCurrentCard();
+    defaultHistoryState(true);
+  } else {
+    window.location = 'index.html';
+  }
+}
+
+siteTitle.addEventListener('click', homeBtnHandler);
 
 window.addEventListener('popstate', popStateHandler);
 
