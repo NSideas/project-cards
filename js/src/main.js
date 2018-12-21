@@ -67,21 +67,25 @@ function positionCard(card) {
   card.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
+function renderNextLink(project) {
+  return `
+    <div class="btn-container">
+      <a href="${project}" class="btn-next-project">Next Project</a>
+    </div>
+  `;
+}
+
 function fetchProjectInfo(card, project) {
   // console.log('Fetching project info');
   fetch(`./pages/${project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
-
     const cardBody = card.querySelector('.card-body--inner');
     cardBody.innerHTML += content;
-
     const nextCard = cards[childIndex(card) + 1];
     if (nextCard !== undefined) {
       const nextProject = nextCard.querySelector('.card-header').getAttribute('href');
-      cardBody.innerHTML += `
-        <a href="${nextProject}" class="btn-next-project">Next Project</a>
-      `;
+      cardBody.innerHTML += renderNextLink(nextProject);
     }
     setTimeout(() => {
       card.classList.add('content-loaded');

@@ -88,15 +88,18 @@ header {
 }
 
 @mixin card_color($color, $invert: false) {
+  $text_color: white;
   @if $invert == true {
-    color: mix($color, black, 20%);
-  } @else {
-    color: white;
+    $text_color: mix($color, black, 20%);
   }
+  color: $text_color;
   &::before,
   .card-header,
   .card-body--outer {
     background-color: $color;
+  }
+  .btn-next-project {
+    color: $text_color;
   }
 }
 
@@ -182,6 +185,21 @@ header {
   }
 }
 
+.btn-container {
+  text-align: center;
+  padding-top: 2em;
+  padding-bottom: 2.5em;
+}
+
+.btn-next-project {
+  display: inline-block;
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
+  border: solid 1px;
+  padding: 1em 1.75em;
+}
+
 .card.expanded {
   @include card_state__expanded;
   position: fixed;
@@ -210,7 +228,6 @@ header {
     pointer-events: all;
   }
 }
-
 
 .card.anim-in {
   .card-body--outer {
