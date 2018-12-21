@@ -39,6 +39,10 @@ function ProjectCard(card) {
   this.project = card.getAttribute('id');
 }
 
+const getProjectFromUrl = () => {
+  return projectCards.filter(item => item.project === getUrlParameter('content'));
+}
+
 let cardHeight, cardScale, gutter;
 
 function calculateScale() {
@@ -191,14 +195,14 @@ const popStateHandler = (event) => {
   if (event.state.content === 'project index') {
     closeCurrentCard();
   } else if (getUrlParameter('content')) {
-    const project = projectCards.filter(item => item.project === getUrlParameter('content'));
+    const project = getProjectFromUrl();
     openCard(project[0], false);
   }
 };
 
 function pageLoad() {
   if (window.location.search) {
-    const project = projectCards.filter(item => item.project === getUrlParameter('content'));
+    const project = getProjectFromUrl();
     openCard(project[0], false);
   }
 }
