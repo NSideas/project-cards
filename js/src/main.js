@@ -59,7 +59,7 @@ function randomProjectContent(el) {
 }
 
 function positionCard(card) {
-  console.log('Positioning card');
+  // console.log('Positioning card');
   const index = childIndex(card);
   const header = document.getElementById('header');
   const hh = header ? header.clientHeight : 0;
@@ -68,12 +68,21 @@ function positionCard(card) {
 }
 
 function fetchProjectInfo(card, project) {
-  console.log('Fetching project info');
+  // console.log('Fetching project info');
   fetch(`./pages/${project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
-    const cardBody = card.querySelector('.card-body--outer');
+
+    const cardBody = card.querySelector('.card-body--inner');
     cardBody.innerHTML += content;
+
+    const nextCard = cards[childIndex(card) + 1];
+    if (nextCard !== undefined) {
+      const nextProject = nextCard.querySelector('.card-header').getAttribute('href');
+      cardBody.innerHTML += `
+        <a href="${nextProject}" class="btn-next-project">Next Project</a>
+      `;
+    }
     setTimeout(() => {
       card.classList.add('content-loaded');
     }, 125);
@@ -83,7 +92,7 @@ function fetchProjectInfo(card, project) {
 }
 
 function openCard(card, project, push) {
-  console.log('Opening card');
+  // console.log('Opening card');
   if (push) {
     const stateObj = { content: project };
     history.pushState(stateObj, 'project page', `?content=${project}`);
@@ -135,7 +144,7 @@ function defaultHistoryState(push) {
 }
 
 function setUpCards() {
-  console.log('Setting up cards');
+  // console.log('Setting up cards');
   calculateScale();
   setWrapperHeight();
   if (!getUrlParameter('content')) {
@@ -165,7 +174,7 @@ function resetCards() {
 }
 
 const popStateHandler = (event) => {
-  console.log('Popstate fired!');
+  // console.log('Popstate fired!');
   if (event.state.content === 'project index') {
     closeCurrentCard();
   } else if (getUrlParameter('content')) {
@@ -183,7 +192,6 @@ function pageLoad() {
 
 function homeBtnHandler(e) {
   e.preventDefault();
-  console.log('click');
   if (getUrlParameter('content') !== '') {
     closeCurrentCard();
     defaultHistoryState(true);
