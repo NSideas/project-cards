@@ -32,16 +32,13 @@ const closeButton = document.getElementById('close-project');
 const cardDelay = 250;
 const projectCards = [];
 
-function ProjectCard(card) {
-  this.el = card;
-  this.header = card.querySelector('.card-header');
-  this.link = this.header.getAttribute('href');
-  this.project = card.getAttribute('id');
-}
+const getProjectByUrl = () => {
+  return projectCards.filter(item => item.project === getUrlParameter('content'))[0];
+};
 
-const getProjectFromUrl = () => {
-  return projectCards.filter(item => item.project === getUrlParameter('content'));
-}
+const getProjectByElement = (element) => {
+  return projectCards.filter(item => item.el === element)[0];
+};
 
 let cardHeight, cardScale, gutter;
 
@@ -87,20 +84,19 @@ function renderNextLink(project) {
   `;
 }
 
-function fetchProjectInfo(card, project) {
+function fetchProjectInfo(card) {
   // console.log('Fetching project info');
-  fetch(`./pages/${project}.html`).then((response) => {
+  fetch(`./pages/${card.project}.html`).then((response) => {
     return response.text();
   }).then((content) => {
-    const cardBody = card.querySelector('.card-body--inner');
-    cardBody.innerHTML += content;
-    const nextCard = cards[childIndex(card) + 1];
+    card.body.innerHTML += content;
+    const nextCard = cards[childIndex(card.el) + 1];
     if (nextCard !== undefined) {
-      const nextProject = nextCard.querySelector('.card-header').getAttribute('href');
-      cardBody.innerHTML += renderNextLink(nextProject);
+      const nextProject = getProjectByElement(nextCard);
+      card.body.innerHTML += renderNextLink(nextProject.link);
     }
     setTimeout(() => {
-      card.classList.add('content-loaded');
+      card.el.classList.add('content-loaded');
     }, 125);
   }).catch((err) => {
     console.log('Fetch Error', err);
@@ -117,9 +113,6 @@ function openCard(card, push) {
   card.el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   card.el.style.top = `-${window.pageYOffset}px`;
   bodyScrollLock.disableBodyScroll(card.el);
-  const style = getComputedStyle(card.header);
-  const backgroundColor = style.backgroundColor;
-  // console.log(backgroundColor);
   setTimeout(() => {
     card.el.classList.remove('anim-in');
     if (closeButton) {
@@ -127,7 +120,7 @@ function openCard(card, push) {
     }
   }, cardDelay);
   if (!card.el.classList.contains('content-loaded')) {
-    fetchProjectInfo(card.el, card.project);
+    fetchProjectInfo(card);
   }
 }
 
@@ -159,6 +152,22 @@ function defaultHistoryState(push) {
   }
 }
 
+function ProjectCard(card) {
+  this.el = card;
+  this.header = card.querySelector('.card-header');
+  this.body = card.querySelector('.card-body--inner');
+  this.project = card.getAttribute('id');
+  this.link = this.header.getAttribute('href');
+
+  this.header.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!this.el.classList.contains('expanded')) {
+      openCard(this, true);
+    }
+  });
+
+}
+
 function setUpCards() {
   // console.log('Setting up cards');
   calculateScale();
@@ -170,13 +179,6 @@ function setUpCards() {
     let newCard = new ProjectCard(card);
     projectCards.push(newCard);
     positionCard(card);
-    let cardHeader = card.querySelector('.card-header');
-    cardHeader.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!card.classList.contains('expanded')) {
-        openCard(newCard, true);
-      }
-    });
   }
 }
 
@@ -195,15 +197,15 @@ const popStateHandler = (event) => {
   if (event.state.content === 'project index') {
     closeCurrentCard();
   } else if (getUrlParameter('content')) {
-    const project = getProjectFromUrl();
-    openCard(project[0], false);
+    const project = getProjectByUrl();
+    openCard(project, false);
   }
 };
 
 function pageLoad() {
   if (window.location.search) {
-    const project = getProjectFromUrl();
-    openCard(project[0], false);
+    const project = getProjectByUrl();
+    openCard(project, false);
   }
 }
 
