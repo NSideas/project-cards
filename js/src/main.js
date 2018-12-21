@@ -145,7 +145,6 @@ function setUpCards() {
     positionCard(card);
     let cardHeader = card.querySelector('.card-header');
     let project = card.getAttribute('id');
-    // project = project.split('=')[1];
     cardHeader.addEventListener('click', (e) => {
       e.preventDefault();
       if (!card.classList.contains('expanded')) {
@@ -185,7 +184,7 @@ function pageLoad() {
 function homeBtnHandler(e) {
   e.preventDefault();
   console.log('click');
-  if (getUrlParameter('content') != '') {
+  if (getUrlParameter('content') !== '') {
     closeCurrentCard();
     defaultHistoryState(true);
   } else {
