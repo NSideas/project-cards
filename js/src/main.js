@@ -30,17 +30,6 @@ function setWrapperHeight() {
   cardWrapper.style.height = `${wrapperHeight}px`;
 }
 
-function randomProjectContent(el) {
-  let projectTitle = `<h1>${chance.animal()} ${chance.animal()}</h1>`;
-  let projectBody  = `<h2>${chance.sentence()}</h2>`;
-      projectBody += `<h4>${chance.company()}</h4>`;
-      projectBody += `<p>${chance.paragraph()}</p>`;
-      projectBody += `<p>${chance.paragraph()}</p>`;
-
-  el.querySelector('.card-header').innerHTML = projectTitle;
-  el.querySelector('.card-body--inner').innerHTML = projectBody;
-}
-
 function positionCard(card) {
   // console.log('Positioning card');
   const index = childIndex(card);
@@ -50,12 +39,32 @@ function positionCard(card) {
   card.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
 }
 
+function nextBtnHandler() {
+  console.log('something');
+}
+
 function renderNextLink(project) {
-  return `
-    <div class="btn-container">
-      <a href="${project}" class="btn-next-project">Next Project</a>
-    </div>
-  `;
+  const nextCard = cards[childIndex(project.el) + 1];
+  if (nextCard !== undefined) {
+    const nextProject = getProjectByElement(nextCard);
+
+    const btnContainer = document.createElement('div');
+    btnContainer.classList.add('btn-container');
+    project.body.appendChild(btnContainer);
+
+    const nextLink = document.createElement('a');
+    nextLink.classList.add('btn-next-project');
+    nextLink.innerHTML = 'Next Project';
+    nextLink.href = nextProject.link;
+
+    nextLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeCurrentCard();
+      openCard(nextProject, true);
+    });
+
+    btnContainer.appendChild(nextLink);
+  }
 }
 
 function fetchProjectInfo(card) {
@@ -64,11 +73,7 @@ function fetchProjectInfo(card) {
     return response.text();
   }).then((content) => {
     card.body.innerHTML += content;
-    const nextCard = cards[childIndex(card.el) + 1];
-    if (nextCard !== undefined) {
-      const nextProject = getProjectByElement(nextCard);
-      card.body.innerHTML += renderNextLink(nextProject.link);
-    }
+    renderNextLink(card);
     setTimeout(() => {
       card.el.classList.add('content-loaded');
     }, 125);
@@ -192,6 +197,9 @@ function homeBtnHandler(e) {
     window.location = 'index.html';
   }
 }
+
+
+
 
 siteTitle.addEventListener('click', homeBtnHandler);
 

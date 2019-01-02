@@ -3403,7 +3403,7 @@
 			"optionString": "{'allowParens': false}"
 			},
 		"no-console": {
-			"active": 1,
+			"active": 0,
 			"optionString": "{'allow': ['warn', 'error']}"
 			},
 		"no-const-assign": {
@@ -3779,7 +3779,7 @@
 			"optionString": "{'skipBlankLines': false, 'ignoreComments': false}"
 			},
 		"no-undef": {
-			"active": 1,
+			"active": 0,
 			"optionString": "{'typeof': false}"
 			},
 		"no-undef-init": {
