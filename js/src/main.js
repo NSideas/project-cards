@@ -88,6 +88,7 @@ function openCard(card, push) {
     const stateObj = { content: card.project };
     history.pushState(stateObj, 'project page', card.link);
   }
+  // console.log(card.offsetTop);
   card.el.classList.add('expanded', 'anim-in');
   card.el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   card.el.style.top = `-${window.pageYOffset}px`;
@@ -176,6 +177,7 @@ const popStateHandler = (event) => {
   if (event.state.content === 'project index') {
     closeCurrentCard();
   } else if (getUrlParameter('content')) {
+    closeCurrentCard();
     const project = getProjectByUrl();
     openCard(project, false);
   }
@@ -199,12 +201,8 @@ function homeBtnHandler(e) {
 }
 
 
-
-
 siteTitle.addEventListener('click', homeBtnHandler);
-
 window.addEventListener('popstate', popStateHandler);
-
 window.addEventListener('load', pageLoad);
 
 window.addEventListener('resize', debounce(() => {
