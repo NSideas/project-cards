@@ -22,7 +22,8 @@ $large: 1000px;
 $card_header_scale: var(--card-scale);
 $card_invert_scale: calc(1 + 1 - var(--card-scale));
 $card_trans_duration: .25s;
-$card_trans: all $card_trans_duration ease-in-out;
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+$card_trans: all $card_trans_duration $ease;
 
 html,
 body {
@@ -114,11 +115,12 @@ header {
 
 .card {
   @include card_color(#1A1A1A);
+  opacity: 1;
   position: absolute;
   top: 0;
   width: 100%;
   scroll-behavior: smooth;
-  transition: transform $card_trans_duration ease-in-out;
+  transition: transform $card_trans_duration $ease;
   .no-trans & {
     transition: none;
   }
@@ -133,8 +135,12 @@ header {
     height: calc(100vh - var(--card-height));
     z-index: 0;
     transform-origin: top;
-    transition: all $card_trans_duration ease-in-out;
+    transition: all $card_trans_duration $ease;
   }
+}
+
+body.card-open .card:not(.expanded) {
+  // opacity: 0;
 }
 
 .card-header {
@@ -168,8 +174,8 @@ header {
   align-items: flex-start;
   height: 0;
   overflow: hidden;
-  transition: transform $card_trans_duration ease-in-out,
-              opacity $card_trans_duration ease-in-out;
+  transition: transform $card_trans_duration $ease,
+              opacity $card_trans_duration $ease;
 }
 
 .card-body--inner {

@@ -24,6 +24,12 @@ function calculateScale() {
   gutter = cardWrapper.clientWidth * (1 - cardScale)/2;
 }
 
+const calculateDuration = element => {
+  const distanceFromTop = element.getBoundingClientRect().top;
+  const duration =  Math.abs(distanceFromTop) / 5 + 200;
+  return Math.max(duration, 300);
+}
+
 function setWrapperHeight() {
   const wrapperHeight = cards.length * (cardHeight + gutter);
   cardWrapper.style.height = `${wrapperHeight}px`;
@@ -52,10 +58,13 @@ function renderNextLink(project) {
     nextLink.innerHTML = 'Next Project';
     nextLink.href = nextProject.link;
 
-    nextLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeCurrentCard();
-      openCard(nextProject, true);
+    nextLink.addEventListener('click', event => {
+      event.preventDefault();
+      const lastCard = document.querySelector('.card.expanded');
+      openCard(nextProject, true, 500);
+      setTimeout(() => {
+        closeCard(lastCard);
+      }, 500);
     });
 
     btnContainer.appendChild(nextLink);
@@ -77,15 +86,14 @@ function fetchProjectInfo(card) {
   });
 }
 
-function openCard(card, push) {
+function openCard(card, push, duration = null) {
   // console.log('Opening card');
   if (push) {
     const stateObj = { content: card.project };
     history.pushState(stateObj, 'project page', card.link);
   }
 
-  const distanceFromTop = card.el.getBoundingClientRect().top;
-  const transitionTime = Math.abs(distanceFromTop) / 5 + 200;
+  const transitionTime = duration ? duration : calculateDuration(card.el);
   const bodyWrapper = card.el.querySelector('.card-body--outer');
   card.el.style.transitionDuration = `${transitionTime}ms`;
   bodyWrapper.style.transitionDuration = `${transitionTime}ms`;
@@ -94,6 +102,7 @@ function openCard(card, push) {
   card.el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   card.el.style.top = `-${window.pageYOffset}px`;
   bodyScrollLock.disableBodyScroll(card.el);
+  document.body.classList.add('card-open');
 
   setTimeout(() => {
     card.el.classList.remove('anim-in');
@@ -107,9 +116,7 @@ function openCard(card, push) {
 }
 
 function closeCard(card) {
-  if (closeButton) {
-    closeButton.classList.remove('visible');
-  }
+  if (closeButton) closeButton.classList.remove('visible');
   card.scrollTop = 0;
   card.classList.add('anim-out');
   bodyScrollLock.enableBodyScroll(card);
@@ -117,6 +124,9 @@ function closeCard(card) {
   setTimeout(() => {
     card.classList.remove('expanded', 'anim-out');
     card.style.top = `0`;
+    if (!document.querySelector('.card.expanded')) {
+      document.body.classList.remove('card-open');
+    }
   }, cardDelay);
 }
 
@@ -143,8 +153,8 @@ function ProjectCard(card) {
   this.project = card.getAttribute('id');
   this.link = this.header.getAttribute('href');
 
-  this.header.addEventListener('click', (e) => {
-    e.preventDefault();
+  this.header.addEventListener('click', event => {
+    event.preventDefault();
     if (!this.el.classList.contains('expanded')) {
       openCard(this, true);
     }
@@ -182,8 +192,11 @@ const popStateHandler = event => {
     closeCurrentCard();
   } else if (getUrlParameter('content')) {
     closeCurrentCard();
+    let delay = document.body.classList.contains('card-open') ? 500 : 0;
     const project = getProjectByUrl();
-    openCard(project, false);
+    setTimeout(() => {
+      openCard(project, false, 500);
+    }, delay);
   }
 };
 
