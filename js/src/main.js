@@ -6,13 +6,12 @@ const closeButton = document.getElementById('close-project');
 const cardDelay = 250;
 const projectCards = [];
 
-const getProjectByUrl = () => {
-  return projectCards.filter(item => item.project === getUrlParameter('content'))[0];
-};
+const getProjectByUrl = () =>
+  projectCards.filter(item => item.project === getUrlParameter('content'))[0];
 
-const getProjectByElement = (element) => {
-  return projectCards.filter(item => item.el === element)[0];
-};
+const getProjectByElement = element =>
+  projectCards.filter(item => item.el === element)[0];
+
 
 let cardHeight, cardScale, gutter;
 
@@ -37,10 +36,6 @@ function positionCard(card) {
   const hh = header ? header.clientHeight : 0;
   const y = hh + index * cardHeight;
   card.style.transform = `scaleX(${cardScale}) translateY(${y + gutter * index}px)`;
-}
-
-function nextBtnHandler() {
-  console.log('something');
 }
 
 function renderNextLink(project) {
@@ -88,11 +83,18 @@ function openCard(card, push) {
     const stateObj = { content: card.project };
     history.pushState(stateObj, 'project page', card.link);
   }
-  // console.log(card.offsetTop);
+
+  const distanceFromTop = card.el.getBoundingClientRect().top;
+  const transitionTime = Math.abs(distanceFromTop) / 5 + 200;
+  const bodyWrapper = card.el.querySelector('.card-body--outer');
+  card.el.style.transitionDuration = `${transitionTime}ms`;
+  bodyWrapper.style.transitionDuration = `${transitionTime}ms`;
+
   card.el.classList.add('expanded', 'anim-in');
   card.el.style.transform = `scaleX(1) translateY(${window.pageYOffset}px)`;
   card.el.style.top = `-${window.pageYOffset}px`;
   bodyScrollLock.disableBodyScroll(card.el);
+
   setTimeout(() => {
     card.el.classList.remove('anim-in');
     if (closeButton) {
@@ -120,7 +122,9 @@ function closeCard(card) {
 
 function closeCurrentCard() {
   const currentCard = document.querySelector('.card.expanded');
-  closeCard(currentCard);
+  if (currentCard) {
+    closeCard(currentCard);
+  }
 }
 
 function defaultHistoryState(push) {
@@ -172,7 +176,7 @@ function resetCards() {
   }
 }
 
-const popStateHandler = (event) => {
+const popStateHandler = event => {
   // console.log('Popstate fired!');
   if (event.state.content === 'project index') {
     closeCurrentCard();
