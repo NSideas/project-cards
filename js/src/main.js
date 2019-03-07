@@ -26,7 +26,7 @@ function calculateScale() {
 
 const calculateDuration = element => {
   const distanceFromTop = element.getBoundingClientRect().top;
-  const duration =  Math.abs(distanceFromTop) / 5 + 200;
+  const duration =  Math.abs(distanceFromTop) / 5 + 300;
   return Math.max(duration, 300);
 }
 
